@@ -411,3 +411,46 @@ angular
 Users.getMem();
 Users.setMem();
 ```
+
+### Property casting
+
+You can preprocess or cast item properties during fetching and hydration phase. This can be usefull for dates, JSON properties, comma separated values or other.
+
+There is already built in cast for **date** type, but you can also pass a function to create your own. Here's an example:
+
+```
+app.service('Users', function(Resource) {
+  var Users = new Resource({
+    url: '/api/v1/users',
+
+    casts: {
+      last_logged_in: 'date', // Converts date strong to date object
+
+      features: function(v) {   // This converts a comma separated string to array
+        if ( ! angular.isArray(v)) {
+          return v.split(',')
+        }
+        return v;
+      },
+
+      enabled: function(v) { // Convert raw value to boolean
+        return v === true;
+      },
+
+      info: function(v) {  // This converts JSON to object
+        if ( ! angular.isObject(v)) {
+          return angular.fromJson(v);
+        }
+        return v;
+      }
+    }
+  });
+  return Users;
+});
+
+// Fetch and use
+Users.get(10).to(this, 'user')
+...
+console.log(this.user.last_logged_in) //  Converted to Date
+console.log(this.user.features) //  Converted to Array
+```
