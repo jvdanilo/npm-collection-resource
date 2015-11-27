@@ -118,7 +118,6 @@ Saves object property and redirects response to the same property (see **.to()**
 var promise = Users.saveProp($scope, 'selectedUser', {anything: 10});
 
 // or
-
 var promise = Users.saveProp($scope.users, 10 /* array index */, {anything: 10});
 
 // or
@@ -434,7 +433,7 @@ app.service('Users', function(Resource) {
       },
 
       enabled: function(v) { // Convert raw value to boolean
-        return v === true;
+        return v ? true : false;
       },
 
       info: function(v) {  // This converts JSON to object
@@ -452,5 +451,7 @@ app.service('Users', function(Resource) {
 Users.get(10).to(this, 'user')
 ...
 console.log(this.user.last_logged_in) //  Converted to Date
+console.log(this.user.enabled) //  Converted to boolean
 console.log(this.user.features) //  Converted to Array
+console.log(this.user.info) //  Converted from JSON to object
 ```
