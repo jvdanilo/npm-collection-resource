@@ -2,6 +2,14 @@
 
 Collection Resource is a simple but powerful AJAX resource library for Angular. It makes requests assuming REST API, and works with plain old JavaScript objects.
 
+## Installation
+
+Install with Bower
+
+```
+bower install collection-resource
+```
+
 ## Usage
 
 To use with angular add it as a module:
