@@ -53,12 +53,25 @@ describe('Basic methods', function() {
 
     it ("gets models and passes parameters", function() {
 
-      api.query({sort: 'id', filters:{enabled:true}}).then(function(response) {
+      // This tests serializer
+      var date = new Date();
+      date.setDate(10);
+      date.setMonth(10);
+      date.setHours(2);
+      date.setMinutes(3);
+      date.setSeconds(4);
+      var datestring = encodeURIComponent(date.getFullYear()+'-11-10 02:03:04')
+
+      api.query({sort: 'id', filters:{enabled:true, from:date}}).then(function(response) {
         expect(response.data[0].id).toBe(10);
       });
 
-      httpBackend.expectGET('/users?sort=id&filters%5Benabled%5D=true')
-        .respond({data: [{id: 10}]})
+
+      httpBackend.expectGET('/users?sort=id&filters%5Benabled%5D=true&filters%5Bfrom%5D='+datestring)
+        .respond({data: [
+          {id: 10, created_at: '2017-11-10 02:03:04'},
+          {id: 11, created_at: '2017-11-10 02:03:04'}
+        ]})
       httpBackend.flush()
     });
   });

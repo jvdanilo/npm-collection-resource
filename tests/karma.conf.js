@@ -1,12 +1,15 @@
 module.exports = function(config) {
   config.set({
-    basePath : './',
+    basePath : './../',
 
     files: [
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'src/collection-resource.js',
-      'tests/*.js'
+      'src/undo-redo-addon.js',
+      'src/value-get-addon.js',
+      '!tests/karma.conf.js',
+      'tests/*.js',
     ],
 
     preprocessors: {
@@ -19,7 +22,7 @@ module.exports = function(config) {
       dir: 'coverage/',
       reporters: [
         { type: 'html', subdir: 'report-html' },
-        // { type: 'teamcity', subdir: '.', file: 'teamcity.txt' },
+        // { type: 'teamcity', subdir: '..', file: 'teamcity.txt' },
         // { type: 'text', subdir: '.', file: 'text.txt' },
         // { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
       ]
