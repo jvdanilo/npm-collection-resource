@@ -381,15 +381,8 @@
     this.transformPromise = transformPromise;
 
     this.get = this.find = function(id, params) {
-      var url = options.url;
+      var url = options.url + '/' + id;
       params = params || {};
-
-      if (angularIsObject(id)) {
-        params = id;
-      }
-      else {
-        url += '/' + id;
-      }
 
       var reload = params.reload;
       delete params.reload;
@@ -469,7 +462,9 @@
       params = params || {};
       params.data = angularCopy(object);
 
-      if (object.$new) {
+      var objectDesntHaveId = angularIsObject(object) && object[options.primary] == undefined;
+
+      if (objectDesntHaveId || object.$new) {
         promise = createObject(object, params);
       }
       else {

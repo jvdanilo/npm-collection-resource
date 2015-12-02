@@ -76,7 +76,9 @@ var promise = Users.save(user);
 
 This will send a **PUT** request to */users/10* api path with user data.
 
-Except for **new** or objects which you wan't to create. You need to mark those with **.make()** method:
+By default Collection Resource will try to recognize, by existance of **id** (or primary field) which request to send POST or PUT.
+
+For other cases where you want to force a POST/CREATING request you can use **.make()** to mark those objects as **new** for POST-ing.
 
 ### .make([newObject])
 
@@ -86,11 +88,11 @@ var newUser = Users.make({name: 'Nick'});
 var promise = Users.save(newUser);
 ```
 
-This will send a **POST** request to */users* api path with user data. **.make()** only marks your objects with special properties with which model can recognize which request to send.
+This will send a **POST** request to */users* api path with user data. **.make()** only marks your objects with special properties with which Resource can recognize which request to send.
 
 ### .from(objectOrArray)
 
-You can use **.from** to convert a new (made with **.make()**) object into a simple existing object.
+You can use **.from** to convert a new (marked with **.make()**) object into a simple existing object.
 
 ```
 var user = Users.make();
@@ -102,6 +104,8 @@ user = User.from(user);
 // Sends a PUT request to /users/10
 Users.save(user);
 ```
+
+You can use this to run **property casting** or **hydrator** (described below) on models which you made in memory or saved to local storage.
 
 ### .save(object[, params])
 
@@ -165,7 +169,7 @@ Users.save($scope.selectedUser).to($scope, 'selectedUser');
 
 ### .fetching(object, property)
 
-Sets **object** property to true while request is running, and sets to false when request is finished. This can be use full for adding loaders.
+Sets **object** property to true while request is running, and sets to false when request is finished. This can be useful for adding loading spinners.
 
 ```
 Users.query({team: 'dev'})
@@ -311,7 +315,7 @@ Users.get(10, {reload: true}).to($scope, 'selected');
 
 ## Partial models
 
-You can also partialy load models, here's an example how you can implement partial loading of "list" and "detail" requests (assuming you implement backend API's similarly):
+You can also partialy load models, here's an example how you can implement partial loading of "list" and "detail" requests (assuming you implement backend API similarly):
 
 ```
 // This is a request for the list interface
@@ -423,7 +427,7 @@ app.service('Users', function(Resource) {
     url: '/api/v1/users',
 
     casts: {
-      last_logged_in: 'date', // Converts date strong to date object
+      last_logged_in: 'date', // Converts date string to date object
 
       features: function(v) {   // This converts a comma separated string to array
         if ( ! angular.isArray(v)) {

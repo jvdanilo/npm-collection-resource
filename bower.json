@@ -6,7 +6,7 @@
   ],
   "license": "Apache-2.0",
   "main": [
-    "./collection.js"
+    "./src/collection-resource.js"
   ],
   "moduleType": [],
   "keywords": [
@@ -25,5 +25,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "angular-mocks": "~1.4.8"
+  }
 }
