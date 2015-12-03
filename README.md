@@ -17,7 +17,7 @@ bower install collection-resource
 
 To use with angular add it as a module:
 
-```
+```javascript
 var app = angular.module('my-special-app', [
   ...
   'collection.resource'
@@ -26,7 +26,7 @@ var app = angular.module('my-special-app', [
 
 Create your model using:
 
-```
+```javascript
 app.service('Users', function(Resource) {
   var Users = new Resource({
      // You can set your primary field. "id" is by default
@@ -39,7 +39,7 @@ app.service('Users', function(Resource) {
 
 Now you can use your **Users** model in your controller, like:
 
-```
+```javascript
 app.controller('UsersListController', function($scope, Users) {
 
   Users.query().then(function(users) {
@@ -50,20 +50,21 @@ app.controller('UsersListController', function($scope, Users) {
 
 ## Basic methods
 
-A collection resource has a few basic methods with which you can fetch data from server. You can also extend collection resource with your additional methods. Below you can see methods usage assuming **Users** collection. Most methods return a promise.
+A collection resource has a few basic methods with which you can fetch data from server. You can also extend collection resource with your additional methods. Below you can see methods usage assuming **Users** collection and **/api/v1/users** api as example. Most methods return a promise.
 
 ### .query([params]) / .where([params])
 
 Requests a list and returns a promise.
 
-```
+```javascript
 var promise = Users.query({page: 1});
 ```
 
 ### .get(id[, params]) / .find(id[, params])
 
 Requests a single resource by **id**
-```
+
+```javascript
 var promise = Users.get(10);
 ```
 
@@ -71,7 +72,7 @@ var promise = Users.get(10);
 
 For the most part, Collection Resource works with any Object, for example:
 
-```
+```javascript
 var user = {id: 10, name: 'Nick'};
 
 var promise = Users.save(user);
@@ -85,7 +86,7 @@ For other cases where you want to force a POST/CREATING request you can use **.m
 
 ### .make([newObject])
 
-```
+```javascript
 var newUser = Users.make({name: 'Nick'});
 
 var promise = Users.save(newUser);
@@ -97,7 +98,7 @@ This will send a **POST** request to */users* api path with user data. **.make()
 
 You can use **.from** to convert a new (marked with **.make()**) object into a simple existing object.
 
-```
+```javascript
 var user = Users.make();
 // Sends a POST request to /users
 Users.save(user);
@@ -112,7 +113,7 @@ You can use this to run **property casting** or **hydrator** (described below) o
 
 ### .save(object[, params])
 
-```
+```javascript
 var promise = Users.save(user, {anything: 10});
 ```
 
@@ -120,7 +121,7 @@ var promise = Users.save(user, {anything: 10});
 
 Saves object property and redirects response to the same property (see **.to()** helper).
 
-```
+```javascript
 // Sends the property to server and sets the response to the property
 var promise = Users.saveProp($scope, 'selectedUser', {anything: 10});
 
@@ -131,7 +132,6 @@ var promise = Users.saveProp($scope.users, 10 /* array index */, {anything: 10})
 Users.saveProp($scope, 'selectedUser').fetching($scope, 'saving')
 ```
 
-
 ## Special promises
 
 Returned promises have a few special methods, other then **.then( )** and **.catch**, which can make your code simpler.
@@ -140,7 +140,7 @@ Returned promises have a few special methods, other then **.then( )** and **.cat
 
 **.to()** can extract data from response to a variable or object. It can recognize when response has a **data** property and it extracts only the **data** property, or fallbacks to full response.
 
-```
+```javascript
 Users.query({page: 1}).to($scope, 'users');
 
 // or
@@ -151,7 +151,7 @@ Users.query({page: 1}).to($scope.users);
 
 But you can always attach **.then**:
 
-```
+```javascript
 Users.query({page: 1})
   .to($scope.users)
   .then(function(users) {
@@ -161,7 +161,7 @@ Users.query({page: 1})
 
 Combine with **.save()**
 
-```
+```javascript
 var user = Users.make();
 Users.save(user).to($scope, 'user');
 
@@ -174,7 +174,7 @@ Users.save($scope.selectedUser).to($scope, 'selectedUser');
 
 Sets **object** property to true while request is running, and sets to false when request is finished. This can be useful for adding loading spinners.
 
-```
+```javascript
 Users.query({team: 'dev'})
   .fetching($scope, 'loading')
   .to($scope, 'users');
@@ -193,7 +193,7 @@ Users.saveProp($scope, 'user').fetching($scope, 'saving');
 
 When response has **data** property it gives you **data** property, otherwise it gives you full response
 
-```
+```javascript
 /*
 Server response:
 [
@@ -220,7 +220,7 @@ Users.query({anything: true})
 
 By default you will get a warning for every request that you haven't added **.catch()** or **.error()** handler. The difference with **.error()** is that the original promise is passed through.
 
-```
+```javascript
 Users.query({anything: 1})
   .error(function(errorResponse) {
     // ... handle error response
@@ -243,7 +243,7 @@ Users.where({anything: false})
 
 Aborts a request:
 
-```
+```javascript
 var request = Users.query();
 
 if (shouldAbortCondition) {
@@ -255,7 +255,7 @@ if (shouldAbortCondition) {
 
 Binds request to **$scope** lifecycle and aborts request when **$scope** is destroyed.
 
-```
+```javascript
 Users.query()
   .to($scope.users)
   .bind($scope);
@@ -269,7 +269,7 @@ This gives you the same object by **id** (or primary field) every time. So you c
 
 You can use several requests to load the same data, and the references will be the same, and when you edit one, the other will also be changed.
 
-```
+```javascript
 // This will fetch a user by id of 10
 Users.get(10).to($scope, 'selected');
 
@@ -281,7 +281,7 @@ Users.query({filters: {id: '10,12,14'}}).to($scope.users);
 
 Since this keeps models by id in memory we can also skip requests to server, and we get automatic caching.
 
-```
+```javascript
 // Here we fetch some users
 Users.query({filters: {id: '10,12,14'}}).to($scope.users);
 
@@ -292,7 +292,7 @@ Users.get(10).to($scope, 'selected');
 
 This can make your app much faster, since you can preload models partialy or fully in advance. You can enable this with:
 
-```
+```javascript
 app.service('Users', function(Resource) {
   var Users = new Resource({
     url: '/api/v1/users',
@@ -307,7 +307,7 @@ app.service('Users', function(Resource) {
 
 Sometimes you might want to do both: get the local (already loaded) reference and also refresh it with server request. You can do this by adding **reload: true** to **.get(id)** request parameters:
 
-```
+```javascript
 // Assume we have id 10 already loaded with
 // Users.query().to($scope.users)
 
@@ -320,7 +320,7 @@ Users.get(10, {reload: true}).to($scope, 'selected');
 
 You can also partialy load models, here's an example how you can implement partial loading of "list" and "detail" requests (assuming you implement backend API similarly):
 
-```
+```javascript
 // This is a request for the list interface
 Users.query({fields: 'id,name,updated_at'}).to($scope.users)
 
@@ -336,7 +336,7 @@ Users.get(10, {fields: 'id,text,details', reload: true}).then(function() {
 ### Extend Model
 You can extend your Collection Resource with helper methods during definition, for example:
 
-```
+```javascript
 app.service('Users', function(Resource) {
   var Users = new Resource({
      url: '/api/v1/users'
@@ -363,7 +363,7 @@ Users.markDelete(user);
 
 You can add methods to single items if you need it, but the recommended way is to leave your JavaScript objects **as is**. Here's an example:
 
-```
+```javascript
 app.service('Users', function(Resource) {
   var Users = new Resource({
     url: '/api/v1/users',
@@ -395,7 +395,7 @@ $scope.user.save();
 
 If you want to develop advanced addon's for Collection Resource, you can use **Resource.extend()** to do that, and you can see the official addon for **Undo/Redo** functionality for example. Here's how to extend Coollection Resource:
 
-```
+```javascript
 angular
   .module('collection.resource')
   .run(function (Resource) {
@@ -424,7 +424,7 @@ You can preprocess or cast item properties during fetching and hydration phase. 
 
 There is already built in cast for **date** type, but you can also pass a function to create your own. Here's an example:
 
-```
+```javascript
 app.service('Users', function(Resource) {
   var Users = new Resource({
     url: '/api/v1/users',
