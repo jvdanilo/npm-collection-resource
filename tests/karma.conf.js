@@ -22,7 +22,6 @@ module.exports = function(config) {
       dir: 'coverage/',
       reporters: [
         { type: 'html', subdir: 'report-html' },
-        // { type: 'teamcity', subdir: '..', file: 'teamcity.txt' },
         // { type: 'text', subdir: '.', file: 'text.txt' },
         // { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
       ]

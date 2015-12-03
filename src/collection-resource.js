@@ -389,13 +389,14 @@
 
       if (this.$loaded[id+'']) {
 
-        var promise = Promise.when(this.$loaded[id+'']);
+        var promise = Promise.when({data: this.$loaded[id+'']});
 
         transformPromise(promise);
 
         if (reload) {
           setTimeout(function() {
-            self.request({
+
+            return self.request({
               method: 'GET',
               url: url,
               params: params

@@ -11,7 +11,20 @@ describe('Basic methods', function() {
   beforeEach(module('testing'));
 
   beforeEach(inject(function (Resource, $injector) {
-    api = new Resource({url: '/users'});
+    api = new Resource({
+      url: '/users',
+      casts: {
+        bool: function(val) {
+          if (val == undefined) {
+            return false;
+          }
+          else if (val == '0') {
+            return false;
+          }
+          return true;
+        }
+      }
+    });
 
     httpBackend = $injector.get('$httpBackend');
   }));
@@ -99,21 +112,44 @@ describe('Basic methods', function() {
     it ('makes and POSTS model to /resource', function() {
       var model = api.make({name: 'test'})
       api.save(model).then(function(response) {
-        expect(response.data.id).toBe(10)
+        expect(response.data.id).toBe(10);
       })
-      httpBackend.expectPOST('/users', {data: {name: 'test'}})
+      httpBackend.expectPOST('/users', {data: {name: 'test', bool: false}})
         .respond({data: {id: 10}});
-      httpBackend.flush()
+      httpBackend.flush();
     });
 
     it ('PUTS existsing model to /resource/{id}', function() {
-      var model = {id: 20, name: 'test'}
+      var model = {id: 20, name: 'test'};
       api.save(model).then(function(response) {
-        expect(response.data.test).toBe(true)
+        expect(response.data.test).toBe(true);
       })
       httpBackend.expectPOST('/users/20', {data: {id: 20, name: 'test'}, _method:'PUT'})
         .respond({data: {id: 10, test: true}});
-      httpBackend.flush()
+      httpBackend.flush();
+    });
+
+  });
+
+  describe('.reset()', function() {
+
+    it ('requests resource id and populates original object', function() {
+      var item = {id: 30};
+
+      api.reset(item).then(function() {
+        expect(item.name).toBe('test');
+      });
+
+      httpBackend.expectGET('/users/30').respond({data: {id: 30, name: 'test'}});
+      httpBackend.flush();
+
+      api.reset(item, {enabled: true}).then(function() {
+        expect(item.name).toBe('test');
+      });
+
+      httpBackend.expectGET('/users/30?enabled=true')
+        .respond({data: {id: 30, name: 'test'}});
+      httpBackend.flush();
     });
 
   });
@@ -143,6 +179,31 @@ describe('Basic methods', function() {
         .respond({data: {test: true}});
       httpBackend.flush();
     });
+
+  });
+
+  describe('.from()', function() {
+
+    it ('runs hydrate on object', function() {
+      var item = {id: 10, bool: '0'};
+      api.from(item);
+      expect(item.bool).toBe(false);
+
+      item = {id: 10, bool: '1'};
+      api.from(item);
+      expect(item.bool).toBe(true);
+    });
+
+    it ('runs hydrate on array of objects', function() {
+      var items = [
+        {id: 10, bool: '0'},
+        {id: 12, bool: '1'}
+      ];
+      api.from(items);
+      expect(items[0].bool).toBe(false);
+      expect(items[1].bool).toBe(true);
+    });
+
   });
 
 });
