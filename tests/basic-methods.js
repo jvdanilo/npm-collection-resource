@@ -47,7 +47,7 @@ describe('Basic methods', function() {
     });
 
     it ("gets model by id and passes parameters", function() {
-      api.get(10, {sort: 'id', filters:{enabled:true}})
+      api.get(10, {sort: 'id', filters:{enabled:true}, fn: function() {}})
 
       httpBackend.when('GET', '/users/10?sort=id&filters%5Benabled%5D=true').respond({data: {id: 10}})
       httpBackend.flush()
@@ -107,7 +107,6 @@ describe('Basic methods', function() {
         .respond({data: {id: 10, test: true}});
       httpBackend.flush();
     });
-
 
     it ('makes and POSTS model to /resource', function() {
       var model = api.make({name: 'test'})
@@ -192,6 +191,8 @@ describe('Basic methods', function() {
       item = {id: 10, bool: '1'};
       api.from(item);
       expect(item.bool).toBe(true);
+
+      api.from();
     });
 
     it ('runs hydrate on array of objects', function() {

@@ -108,13 +108,6 @@
       _method: true
     }, options);
 
-    // Backwards compatibility
-    if  (options.dates) {
-      for (var _d in options.dates) {
-        options.casts[options.dates[_d]] = 'date';
-      }
-    }
-
     var self = this;
 
     this.$loaded = {};
@@ -133,14 +126,15 @@
     }
 
     function hydrate(object, isNew) {
+      var cast, key;
       if ( ! object) {
         return;
       }
 
-      for (var key in options.casts) {
-        var cast = options.casts[key];
+      for (key in options.casts) {
+        cast = options.casts[key];
 
-        if  (cast === 'date') {
+        if (cast === 'date') {
           var v = object[key];
           if (v && ! angularIsDate(v)) {
             object[key] = parseDate(v);
@@ -171,7 +165,7 @@
         hydrateMany(response.data);
       }
       else if (angularIsObject(response.data))  {
-        hydrate(response);
+        hydrate(response.data);
       }
       else {
         hydrate(response);
