@@ -14,6 +14,7 @@ describe('Basic methods', function() {
     api = new Resource({
       url: '/users',
       casts: {
+        created_at: 'date',
         bool: function(val) {
           if (val == undefined) {
             return false;
@@ -47,9 +48,14 @@ describe('Basic methods', function() {
     });
 
     it ("gets model by id and passes parameters", function() {
-      api.get(10, {sort: 'id', filters:{enabled:true}, fn: function() {}})
+      var item = api.make({});
 
-      httpBackend.when('GET', '/users/10?sort=id&filters%5Benabled%5D=true').respond({data: {id: 10}})
+      api.get(10, {sort: 'id', filters:{enabled:true}, fn: function() {}})
+        .to(item);
+
+      httpBackend.when('GET', '/users/10?sort=id&filters%5Benabled%5D=true').respond({
+        data: {id: 10, $new: true}
+      });
       httpBackend.flush()
     });
   })
@@ -78,7 +84,6 @@ describe('Basic methods', function() {
       api.query({sort: 'id', filters:{enabled:true, from:date}}).then(function(response) {
         expect(response.data[0].id).toBe(10);
       });
-
 
       httpBackend.expectGET('/users?sort=id&filters%5Benabled%5D=true&filters%5Bfrom%5D='+datestring)
         .respond({data: [

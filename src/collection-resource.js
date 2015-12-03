@@ -18,12 +18,13 @@
   }
 
   function extendObject(response, object) {
-    if ( ! response.$new) {
-      angularCopy(response, object);
-    }
-    else {
-      angularExtend(response, object);
-    }
+    // if (response.$new) {
+    //   angularExtend(response, object);
+    // }
+    // else {
+    //   angularCopy(response, object);
+    // }
+    angularCopy(response, object);
   }
 
   function pad (number) {
