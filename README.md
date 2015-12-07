@@ -1,7 +1,11 @@
 # Collection Resource
 
 [![Bower](https://img.shields.io/bower/v/collection-resource.svg)]()
+[![Coverage](https://img.shields.io/badge/coverage-94.23-brightgreen.svg)]()
 [![Travis](https://img.shields.io/travis/jvdanilo/bower-collection-resource.svg)](https://travis-ci.org/jvdanilo/bower-collection-resource)
+
+
+
 
 Collection Resource is a simple but powerful AJAX resource library for Angular. It makes requests assuming REST API, and works with plain old JavaScript objects.
 
