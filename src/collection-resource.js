@@ -36,7 +36,7 @@
 
   function standardFormatToDate(dateString) {
     if (dateFormatCache[dateString]) {
-      return dateFormatCache[dateString];
+      return new Date(dateFormatCache[dateString]);
     }
 
     var ref = dateString.split(regSplit),
