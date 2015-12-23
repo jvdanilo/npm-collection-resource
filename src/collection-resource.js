@@ -396,7 +396,7 @@
               url: url,
               params: params
             })
-            .error(function() {})
+            .error(angular.noop)
             .references();
           });
         }
@@ -446,7 +446,7 @@
         url += '/' + id;
       }
 
-      return self.request({url: url, method: 'PUT', data: params});
+      return self.request({url: url, method: 'PATCH', data: params});
     }
 
     function createObject(object, params) {
@@ -458,7 +458,7 @@
       params = params || {};
       params.data = angularCopy(object);
 
-      var objectDesntHaveId = angularIsObject(object) && object[options.primary] == undefined;
+      var objectDesntHaveId = angularIsObject(object) && object[options.primary] === undefined;
 
       if (objectDesntHaveId || object.$new) {
         promise = createObject(object, params);
