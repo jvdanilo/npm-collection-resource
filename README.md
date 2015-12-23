@@ -82,9 +82,9 @@ var user = {id: 10, name: 'Nick'};
 var promise = Users.save(user);
 ```
 
-This will send a **PUT** request to */users/10* api path with user data.
+This will send a **PATCH** request to */users/10* api path with user data.
 
-By default Collection Resource will try to recognize, by existance of **id** (or primary field) which request to send POST or PUT.
+By default Collection Resource will try to recognize, by existance of **id** (or primary field) which request to send POST or PATCH.
 
 For other cases where you want to force a POST/CREATING request you can use **.make()** to mark those objects as **new** for POST-ing.
 
@@ -109,7 +109,7 @@ Users.save(user);
 
 user.id = 10;
 user = User.from(user);
-// Sends a PUT request to /users/10
+// Sends a PATCH request to /users/10
 Users.save(user);
 ```
 
