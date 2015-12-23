@@ -396,7 +396,7 @@
               url: url,
               params: params
             })
-            .error(function() {})
+            .error(angular.noop)
             .references();
           });
         }
