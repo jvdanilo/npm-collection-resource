@@ -96,7 +96,7 @@ describe('Basic methods', function() {
 
   describe('.make() and .save()', function() {
 
-    it ('can guess POST or PUT', function() {
+    it ('can guess POST or PATCH', function() {
       api.save({name: 'test'}).then(function(response) {
         expect(response.data.id).toBe(10)
       })
@@ -108,7 +108,7 @@ describe('Basic methods', function() {
       api.save({id: 20, name: 'test'}).then(function(response) {
         expect(response.data.test).toBe(true)
       })
-      httpBackend.expectPOST('/users/20', {data: {id: 20, name: 'test'}, _method:'PUT'})
+      httpBackend.expectPOST('/users/20', {data: {id: 20, name: 'test'}, _method:'PATCH'})
         .respond({data: {id: 10, test: true}});
       httpBackend.flush();
     });
@@ -123,12 +123,12 @@ describe('Basic methods', function() {
       httpBackend.flush();
     });
 
-    it ('PUTS existsing model to /resource/{id}', function() {
+    it ('PATCHes existing model to /resource/{id}', function() {
       var model = {id: 20, name: 'test'};
       api.save(model).then(function(response) {
         expect(response.data.test).toBe(true);
       })
-      httpBackend.expectPOST('/users/20', {data: {id: 20, name: 'test'}, _method:'PUT'})
+      httpBackend.expectPOST('/users/20', {data: {id: 20, name: 'test'}, _method:'PATCH'})
         .respond({data: {id: 10, test: true}});
       httpBackend.flush();
     });
