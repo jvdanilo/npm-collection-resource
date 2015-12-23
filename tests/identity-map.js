@@ -32,11 +32,13 @@ describe('Identity map', function() {
 
   it('fetch local and request reloaded', function() {
     var callback;
-    setTimeout = function(c, delay) {
+    var setTimeoutMock = function(c, delay) {
       if ( ! delay) {
         callback = c;
       }
     };
+
+    setTimeout = setTimeoutMock;
 
     var item = {id: 10, name: 'test'};
 
