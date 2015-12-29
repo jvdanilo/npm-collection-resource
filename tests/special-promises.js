@@ -66,4 +66,17 @@ describe('Special promises', function() {
     httpBackend.flush()
   });
 
+  it ('.resolve()', function() {
+
+    api.query().resolve().then(function(response) {
+      expect(response[0].id).toBe(10);
+      expect(response[0].name).toBe('test');
+    })
+
+    httpBackend.when('GET', '/users').respond({
+      data: [{id: 10, name: 'test'}]
+    });
+    httpBackend.flush()
+  });
+
 });

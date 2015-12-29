@@ -303,6 +303,14 @@
         return promise;
       };
 
+      promise.resolve = function() {
+        var p = Promise(function(resolve, reject) {
+          promise.thenData(resolve).catch(reject);
+        });
+        transformPromise(p);
+        return p;
+      };
+
       if (options.references) {
         promise.references();
       }
