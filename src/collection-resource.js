@@ -225,7 +225,7 @@
     }
 
     function transformPromise (promise, warnWhenWithoutCatch) {
-      warnWhenWithoutCatch = (warnWhenWithoutCatch === undefined) ? true : warnWhenWithoutCatch
+      warnWhenWithoutCatch = (warnWhenWithoutCatch === void 0) ? true : warnWhenWithoutCatch
 
       promise.bind = function ($scope) {
         $scope.$on('$destroy', promise.abort)
@@ -412,7 +412,7 @@
     }
 
     this.push = function (objectOrArray, hydrate) {
-      hydrate = hydrate === undefined
+      hydrate = hydrate === void 0
       if (hydrate) {
         hydrator(objectOrArray)
       }
@@ -457,7 +457,7 @@
       params = params || {}
       params.data = angularCopy(object)
 
-      var objectDesntHaveId = angularIsObject(object) && object[options.primary] === undefined
+      var objectDesntHaveId = angularIsObject(object) && object[options.primary] === void 0
 
       if (objectDesntHaveId || object.$new) {
         promise = createObject(object, params)
