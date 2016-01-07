@@ -2,45 +2,41 @@
 /* jshint strict: false */
 angular
   .module('collection.resource')
-  .run(['Resource', function(Resource) {
-
-    var angularIsArray = angular.isArray;
+  .run(['Resource', function (Resource) {
+    var angularIsArray = angular.isArray
 
     Resource.extend({
-      initialize: function() {
+      initialize: function () {
         var options = this.options,
-            _super = options.extendPromise || angular.noop;
+          _super = options.extendPromise || angular.noop
 
         options.extendPromise = function (promise) {
+          var methods = ['unshift', 'push', 'concat']
 
-          var methods = ['unshift', 'push', 'concat'];
-
-          function extender  (method) {
-
-            promise[method] = function(objectOrArray, property) {
-              promise.thenData(function(response) {
+          function extender (method) {
+            promise[method] = function (objectOrArray, property) {
+              promise.thenData(function (response) {
                 if (angularIsArray(objectOrArray)) {
-                  objectOrArray[method](response);
+                  objectOrArray[method](response)
                 }
                 else if (property) {
-                  objectOrArray[property][method](response);
+                  objectOrArray[property][method](response)
+                } else {
+                  objectOrArray[method](response)
                 }
-                else {
-                  objectOrArray[method](response);
-                }
-              });
+              })
 
-              return promise;
-            };
+              return promise
+            }
           }
 
           for (var i in methods) {
-            extender(methods[i]);
+            extender(methods[i])
           }
 
-          _super(promise);
-        };
+          _super(promise)
+        }
       }
-    });
+    })
 
-  }]);
+  }])

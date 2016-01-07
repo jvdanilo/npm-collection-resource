@@ -2,42 +2,41 @@
 /* jshint strict: false */
 angular
   .module('collection.resource')
-  .run(['Resource', function(Resource) {
-
+  .run(['Resource', function (Resource) {
     function getter (obj, s) {
-      if ( ! obj) {
-        return;
+      if (! obj) {
+        return
       }
       var splits = s.split('.'),
-          target = obj,
-          dot;
+        target = obj,
+        dot
 
       for (var i in splits) {
-        dot = splits[i];
+        dot = splits[i]
         if (target[dot] == undefined) {
-          return;
+          return
         }
-        target = target[dot];
+        target = target[dot]
       }
-      return target;
+      return target
     }
 
     Resource.extend({
-      initialize: function() {
+      initialize: function () {
         var options = this.options,
-            _super = options.extendPromise || angular.noop;
+          _super = options.extendPromise || angular.noop
 
         options.extendPromise = function (promise) {
-          promise.value = function(dotted, callback) {
-            promise.then(function(response) {
-              callback(getter(response, dotted));
-            });
+          promise.value = function (dotted, callback) {
+            promise.then(function (response) {
+              callback(getter(response, dotted))
+            })
 
-            return promise;
-          };
-          _super(promise);
-        };
+            return promise
+          }
+          _super(promise)
+        }
       }
-    });
+    })
 
-  }]);
+  }])

@@ -8,9 +8,10 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - npm install -g bower
   - bower -v
-  - npm install karma karma-coverage karma-jasmine jasmine-core karma-firefox-launcher
+  - npm install standard karma karma-coverage karma-jasmine jasmine-core karma-firefox-launcher
   - bower install
   # - sleep 1 # give server time to start
 
 script:
+  - node_modules/.bin/standard src/**/*.js
   - node_modules/.bin/karma start tests/karma.conf.js --no-auto-watch --single-run --reporters=dots --browsers=Firefox
