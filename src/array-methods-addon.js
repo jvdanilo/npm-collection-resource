@@ -7,8 +7,8 @@ angular
 
     Resource.extend({
       initialize: function () {
-        var options = this.options,
-          _super = options.extendPromise || angular.noop
+        var options = this.options
+        var _super = options.extendPromise || angular.noop
 
         options.extendPromise = function (promise) {
           var methods = ['unshift', 'push', 'concat']
@@ -18,8 +18,7 @@ angular
               promise.thenData(function (response) {
                 if (angularIsArray(objectOrArray)) {
                   objectOrArray[method](response)
-                }
-                else if (property) {
+                } else if (property) {
                   objectOrArray[property][method](response)
                 } else {
                   objectOrArray[method](response)
@@ -38,5 +37,4 @@ angular
         }
       }
     })
-
   }])

@@ -4,16 +4,16 @@ angular
   .module('collection.resource')
   .run(['Resource', function (Resource) {
     function getter (obj, s) {
-      if (! obj) {
+      if (!obj) {
         return
       }
-      var splits = s.split('.'),
-        target = obj,
-        dot
+      var splits = s.split('.')
+      var target = obj
+      var dot
 
       for (var i in splits) {
         dot = splits[i]
-        if (target[dot] == undefined) {
+        if (target[dot] === void 0) {
           return
         }
         target = target[dot]
@@ -23,8 +23,8 @@ angular
 
     Resource.extend({
       initialize: function () {
-        var options = this.options,
-          _super = options.extendPromise || angular.noop
+        var options = this.options
+        var _super = options.extendPromise || angular.noop
 
         options.extendPromise = function (promise) {
           promise.value = function (dotted, callback) {
@@ -38,5 +38,4 @@ angular
         }
       }
     })
-
   }])

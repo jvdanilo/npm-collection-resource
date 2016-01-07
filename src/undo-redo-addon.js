@@ -13,7 +13,7 @@ angular
 
       state: function (object) {
         var id = object[this.options.primary] + '' || '$new'
-        if (! this.$states[id]) {
+        if (!this.$states[id]) {
           this.$states[id] = []
           this.state(object)
         }
@@ -23,7 +23,8 @@ angular
         var copy = angularCopy(object)
         delete copy.$v
 
-        var i, ignores = this.options.ignores || []
+        var i
+        var ignores = this.options.ignores || []
         for (i in ignores) {
           delete copy[ignores[i]]
         }
@@ -52,7 +53,7 @@ angular
       },
 
       hasUndo: function (object) {
-        if (! object) {
+        if (!object) {
           return false
         }
 
@@ -85,7 +86,5 @@ angular
         }
         return false
       }
-
     })
-
   }])

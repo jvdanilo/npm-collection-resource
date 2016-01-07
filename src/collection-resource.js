@@ -1,14 +1,14 @@
-;(function (undefined) {
+;(function () {
   'use strict'
 
   /* globals angular */
   /* globals console */
 
-  var angularCopy = angular.copy,
-    angularExtend = angular.extend,
-    angularIsDate = angular.isDate,
-    angularIsArray = angular.isArray,
-    angularIsObject = angular.isObject
+  var angularCopy = angular.copy
+  var angularExtend = angular.extend
+  var angularIsDate = angular.isDate
+  var angularIsArray = angular.isArray
+  var angularIsObject = angular.isObject
 
   function extendArray (response, array) {
     array.length = 0
@@ -39,13 +39,13 @@
       return new Date(dateFormatCache[dateString])
     }
 
-    var ref = dateString.split(regSplit),
-      year = ref[0],
-      month = ref[1],
-      date = ref[2],
-      hour = ref[3],
-      minute = ref[4],
-      seconds = ref[5]
+    var ref = dateString.split(regSplit)
+    var year = ref[0]
+    var month = ref[1]
+    var date = ref[2]
+    var hour = ref[3]
+    var minute = ref[4]
+    var seconds = ref[5]
 
     dateFormatCache[dateString] = new Date(year, month - 1, date, hour, minute, seconds)
 
@@ -68,11 +68,9 @@
       var v = obj[k]
       if (k[0] === '$') {
         delete obj[k]
-      }
-      else if (angularIsDate(v)) {
+      } else if (angularIsDate(v)) {
         obj[k] = toStandardFormat(v)
-      }
-      else if (typeof v === 'object') {
+      } else if (typeof v === 'object') {
         obj[k] = transformRequestParams(v)
       }
     }
@@ -80,7 +78,11 @@
   }
 
   function paramsSerialize (obj, prefix) {
-    var str = [], p, v, k
+    var str = []
+    var p
+    var v
+    var k
+
     for (p in obj) {
       v = obj[p]
       if (typeof v === 'function') {
@@ -128,7 +130,7 @@
 
     function hydrate (object, isNew) {
       var cast, key
-      if (! object) {
+      if (!object) {
         return
       }
 
@@ -137,11 +139,10 @@
 
         if (cast === 'date') {
           var v = object[key]
-          if (v && ! angularIsDate(v)) {
+          if (v && !angularIsDate(v)) {
             object[key] = parseDate(v)
           }
-        }
-        else if (typeof cast === 'function') {
+        } else if (typeof cast === 'function') {
           object[key] = cast(object[key], object)
         }
       }
@@ -160,11 +161,9 @@
     function hydrator (response) {
       if (angularIsArray(response)) {
         hydrateMany(response)
-      }
-      else if (angularIsArray(response.data)) {
+      } else if (angularIsArray(response.data)) {
         hydrateMany(response.data)
-      }
-      else if (angularIsObject(response.data)) {
+      } else if (angularIsObject(response.data)) {
         hydrate(response.data)
       } else {
         hydrate(response)
@@ -172,7 +171,14 @@
     }
 
     function replaceReferences (objectOrArray) {
-      var item, data, i, id, j, len, $loaded = self.$loaded, isSingleObject
+      var item
+      var data
+      var i
+      var id
+      var j
+      var len
+      var $loaded = self.$loaded
+      var isSingleObject
 
       if (angularIsArray(objectOrArray)) {
         data = objectOrArray
@@ -196,8 +202,7 @@
           if (isSingleObject) {
             return $loaded[id]
           }
-        }
-        else if (isSingleObject) {
+        } else if (isSingleObject) {
           return item
         }
       }
@@ -212,7 +217,7 @@
       }
 
       setTimeout(function () {
-        if (! promise.attachedCatch) {
+        if (!promise.attachedCatch) {
           promise.catch(console.log)
           console.error('No .error() or .catch() handler is attached to this promise!')
         }
@@ -248,11 +253,9 @@
         promise.then(function (res) {
           if (angularIsArray(res)) {
             callback(res)
-          }
-          else if (angularIsArray(res.data)) {
+          } else if (angularIsArray(res.data)) {
             callback(res.data)
-          }
-          else if (angularIsObject(res.data)) {
+          } else if (angularIsObject(res.data)) {
             callback(res.data)
           } else {
             callback(res)
@@ -265,8 +268,7 @@
         promise[fullResponse ? 'then' : 'thenData'](function (response) {
           if (angularIsArray(objectOrArray)) {
             extendArray(response, objectOrArray)
-          }
-          else if (property) {
+          } else if (property) {
             objectOrArray[property] = response
           } else {
             extendObject(response, objectOrArray)
@@ -280,16 +282,13 @@
           var result
           if (angularIsArray(res)) {
             replaceReferences(res)
-          }
-          else if (angularIsArray(res.data)) {
+          } else if (angularIsArray(res.data)) {
             replaceReferences(res.data)
-          }
-          else if (angularIsObject(res.data)) {
+          } else if (angularIsObject(res.data)) {
             result = replaceReferences(res.data)
             // Replace promise value with replaced reference
             promise.$$state.value.data = result
-          }
-          else if (angularIsObject(res)) {
+          } else if (angularIsObject(res)) {
             result = replaceReferences(res)
             // Replace promise value with replaced reference
             promise.$$state.value = result
@@ -327,7 +326,7 @@
 
       if (options._method && method !== 'GET' && method !== 'POST') {
         config.method = 'POST'
-        if (! config.data) {
+        if (!config.data) {
           config.data = {}
         }
         config.data._method = method
@@ -346,7 +345,7 @@
       var abort = Promise.defer()
 
       var promise = Promise(function (resolve, reject) {
-        config.transformRequest = [function (value /*, headersGetter */) {
+        config.transformRequest = [ function (value /*, headersGetter */) {
           transformRequestParams(value)
           return value
         }].concat(Http.defaults.transformRequest)
@@ -373,7 +372,7 @@
     this.request = request
 
     this.query = this.where = function (object) {
-      return this.request({ method: 'GET', params: object, url: options.url})
+      return this.request({method: 'GET', params: object, url: options.url})
     }
 
     this.transformPromise = transformPromise
@@ -413,7 +412,7 @@
     }
 
     this.push = function (objectOrArray, hydrate) {
-      hydrate = hydrate === undefined ? true : false
+      hydrate = hydrate === undefined
       if (hydrate) {
         hydrator(objectOrArray)
       }
@@ -436,11 +435,11 @@
     }
 
     function updateObject (object, params) {
-      var id,
-        url = options.url
+      var id
+      var url = options.url
 
-      if (! angularIsArray(object)) {
-        if (! (id = object[options.primary])) {
+      if (!angularIsArray(object)) {
+        if (!(id = object[options.primary])) {
           throw new Error("Object doesn't have " + options.primary)
         }
         url += '/' + id
@@ -502,5 +501,4 @@
 
       return Resource
     }])
-
 })()
