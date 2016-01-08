@@ -12,9 +12,7 @@
 
   function extendArray (response, array) {
     array.length = 0
-    for (var k in response) {
-      array.push(response[k])
-    }
+    array.push.apply(array, response)
   }
 
   function extendObject (response, object) {
