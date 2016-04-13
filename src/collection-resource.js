@@ -1,4 +1,4 @@
-;(function () {
+!(function (empty) {
   'use strict'
 
   /* globals angular */
@@ -16,12 +16,6 @@
   }
 
   function extendObject (response, object) {
-    // if (response.$new) {
-    //   angularExtend(response, object)
-    // }
-    // else {
-    //   angularCopy(response, object)
-    // }
     angularCopy(response, object)
   }
 
@@ -213,17 +207,23 @@
         promise.attachedCatch = true
         return originalCatch.apply(this, arguments)
       }
-
-      setTimeout(function () {
+      setTimeout(function warnAboutUnhandledRejection () {
         if (!promise.attachedCatch) {
-          promise.catch(console.log)
-          console.error('No .error() or .catch() handler is attached to this promise!')
+          promise.catch(function () {
+            console.log.apply(console, arguments)
+          })
+
+          var config = ''
+          if (promise.$config) {
+            config = angular.toJson(promise.$config)
+          }
+          console.error('No rejection handler is attached ' + config)
         }
       }, 100)
     }
 
     function transformPromise (promise, warnWhenWithoutCatch) {
-      warnWhenWithoutCatch = (warnWhenWithoutCatch === void 0) ? true : warnWhenWithoutCatch
+      warnWhenWithoutCatch = (warnWhenWithoutCatch === empty) ? true : warnWhenWithoutCatch
 
       promise.bind = function ($scope) {
         $scope.$on('$destroy', promise.abort)
@@ -343,7 +343,7 @@
       var abort = Promise.defer()
 
       var promise = Promise(function (resolve, reject) {
-        config.transformRequest = [ function (value /*, headersGetter */) {
+        config.transformRequest = [function (value/*, headersGetter */) {
           transformRequestParams(value)
           return value
         }].concat(Http.defaults.transformRequest)
@@ -357,6 +357,7 @@
       })
 
       promise.raw = raw
+      promise.$config = config
 
       promise.abort = function () {
         abort.resolve('aborted')
@@ -382,8 +383,10 @@
       var reload = params.reload
       delete params.reload
 
-      if (this.$loaded[id + '']) {
-        var promise = Promise.when({data: this.$loaded[id + '']})
+      id = id + ''
+
+      if (this.$loaded[id]) {
+        var promise = Promise.when({data: this.$loaded[id]})
 
         transformPromise(promise)
 
@@ -394,8 +397,8 @@
               url: url,
               params: params
             })
-              .error(angular.noop)
-              .references()
+            .error(angular.noop)
+            .references()
           })
         }
 
@@ -410,7 +413,7 @@
     }
 
     this.push = function (objectOrArray, hydrate) {
-      hydrate = hydrate === void 0
+      hydrate = hydrate === empty
       if (hydrate) {
         hydrator(objectOrArray)
       }
@@ -438,7 +441,7 @@
 
       if (!angularIsArray(object)) {
         if (!(id = object[options.primary])) {
-          throw new Error("Object doesn't have " + options.primary)
+          throw new Error('Object doesn\'t have ' + options.primary)
         }
         url += '/' + id
       }
