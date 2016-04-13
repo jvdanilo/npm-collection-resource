@@ -210,7 +210,7 @@
       setTimeout(function warnAboutUnhandledRejection () {
         if (!promise.attachedCatch) {
           promise.catch(function () {
-            console.log.apply(console, arguments)
+            console.error.apply(console, arguments)
           })
 
           var config = ''
