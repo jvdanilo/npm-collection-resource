@@ -42,8 +42,7 @@
       var seconds = ref[5]
 
       dateFormatCache[dateString] = new Date(year, month, date, hour, minute, seconds)
-    }
-    else {
+    } else {
       dateFormatCache[dateString] = new Date(year, month, date)
     }
 
@@ -58,9 +57,8 @@
     // yyyy-mm-dd hh:mm:ss
     if (dateString[4] === '-' && dateString[10] === ' ' && dateString[16] === ':') {
       return standardFormatToDate(dateString)
-    }
     // yyyy-mm-dd
-    else if (dateString[4] === '-' && dateString.length == 10) {
+    } else if (dateString[4] === '-' && dateString.length === 10) {
       return standardFormatToDate(dateString)
     }
   }
