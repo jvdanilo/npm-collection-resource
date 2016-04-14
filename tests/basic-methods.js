@@ -7,6 +7,7 @@ describe('Basic methods', function() {
 
   var api;
   var httpBackend;
+  var q;
 
   beforeEach(module('testing'));
 
@@ -28,6 +29,7 @@ describe('Basic methods', function() {
     });
 
     httpBackend = $injector.get('$httpBackend');
+    q = $injector.get('$q');
   }));
 
   afterEach(function() {
@@ -48,7 +50,7 @@ describe('Basic methods', function() {
     });
 
     it ("gets model by id and passes parameters", function() {
-      var item = api.make({});
+      var item = api.make();
 
       api.get(10, {sort: 'id', filters:{enabled:true}, fn: function() {}})
         .to(item);
@@ -211,6 +213,19 @@ describe('Basic methods', function() {
     });
 
   });
+
+  describe('.transformPromise()', function() {
+
+    it ("populates simple promise with special promise methods", function() {
+      var promise = q(function(resolve, reject) { });
+
+      api.transformPromise(promise, false);
+
+      expect(typeof promise.to).toBe('function');
+      expect(typeof promise.thenData).toBe('function');
+      expect(typeof promise.fetching).toBe('function');
+    })
+  })
 
 });
 
