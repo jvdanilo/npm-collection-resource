@@ -33,13 +33,19 @@
 
     var ref = dateString.split(regSplit)
     var year = ref[0]
-    var month = ref[1]
+    var month = ref[1] - 1
     var date = ref[2]
-    var hour = ref[3]
-    var minute = ref[4]
-    var seconds = ref[5]
 
-    dateFormatCache[dateString] = new Date(year, month - 1, date, hour, minute, seconds)
+    if (ref[3]) {
+      var hour = ref[3]
+      var minute = ref[4]
+      var seconds = ref[5]
+
+      dateFormatCache[dateString] = new Date(year, month, date, hour, minute, seconds)
+    }
+    else {
+      dateFormatCache[dateString] = new Date(year, month, date)
+    }
 
     return dateFormatCache[dateString]
   }
@@ -51,6 +57,10 @@
   function parseDate (dateString) {
     // yyyy-mm-dd hh:mm:ss
     if (dateString[4] === '-' && dateString[10] === ' ' && dateString[16] === ':') {
+      return standardFormatToDate(dateString)
+    }
+    // yyyy-mm-dd
+    else if (dateString[4] === '-' && dateString.length == 10) {
       return standardFormatToDate(dateString)
     }
   }
@@ -458,7 +468,7 @@
       params = params || {}
       params.data = angularCopy(object)
 
-      var objectDesntHaveId = angularIsObject(object) && object[options.primary] === void 0
+      var objectDesntHaveId = angularIsObject(object) && object[options.primary] === empty
 
       if (objectDesntHaveId || object.$new) {
         promise = createObject(object, params)
