@@ -3,7 +3,7 @@ angular.module('testing', [
   'ngMock'
 ]);
 
-describe('Property casting', function() {
+describe('Property casting & Hydration', function() {
 
   var api;
   var httpBackend;
@@ -14,17 +14,9 @@ describe('Property casting', function() {
     api = new Resource({
       url: '/users',
 
-      casts: {
-        joined_on: 'date',
+      hydrate: function (model) {
 
-        settings: function(val, object) {
-          if ( ! angular.isObject(val)) {
-            return angular.fromJson(val);
-          }
-          return val;
-        },
-
-        bool: function(val) {
+        model.bool = (function(val) {
           if (val == undefined) {
             return false;
           }
@@ -32,6 +24,20 @@ describe('Property casting', function() {
             return false;
           }
           return true;
+        })(model.bool)
+
+      },
+
+      casts: {
+        joined_on: 'date',
+
+        updated_on: 'date',
+
+        settings: function(val, object) {
+          if ( ! angular.isObject(val)) {
+            return angular.fromJson(val);
+          }
+          return val;
         }
       }
     });
@@ -58,6 +64,14 @@ describe('Property casting', function() {
       expect(response.joined_on.getHours()).toBe(12);
       expect(response.joined_on.getMinutes()).toBe(21);
       expect(response.joined_on.getSeconds()).toBe(12);
+
+      expect(response.updated_on instanceof Date).toBe(true);
+      expect(response.updated_on.getFullYear()).toBe(2017);
+      expect(response.updated_on.getMonth() + 1).toBe(12);
+      expect(response.updated_on.getDate()).toBe(21);
+      expect(response.updated_on.getHours()).toBe(0);
+      expect(response.updated_on.getMinutes()).toBe(0);
+      expect(response.updated_on.getSeconds()).toBe(0);
     });
 
     httpBackend.when('GET', '/users/10').respond({
@@ -65,7 +79,8 @@ describe('Property casting', function() {
         id: 10,
         settings: '{"test": 12}',
         bool: '1',
-        joined_on: '2017-12-21 12:21:12'
+        joined_on: '2017-12-21 12:21:12',
+        updated_on: '2017-12-21'
       }
     });
     httpBackend.flush()

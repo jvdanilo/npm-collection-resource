@@ -114,7 +114,13 @@ describe('Basic methods', function() {
     });
 
     it ('makes and POSTS model to /resource', function() {
-      var model = api.make({name: 'test'})
+      var model
+      model = api.make()
+      expect(model.$new).toBe(true)
+
+      model = api.make({name:'test'})
+      expect(model.name).toBe('test')
+
       api.save(model).then(function(response) {
         expect(response.data.id).toBe(10);
       })
@@ -132,7 +138,6 @@ describe('Basic methods', function() {
         .respond({data: {id: 10, test: true}});
       httpBackend.flush();
     });
-
   });
 
   describe('.reset()', function() {
