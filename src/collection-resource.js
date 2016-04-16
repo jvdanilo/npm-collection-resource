@@ -5,7 +5,7 @@
   /* globals console */
 
   var angularCopy = angular.copy
-  var angularExtend = angular.extend
+  var angularMerge = angular.merge
   var angularIsDate = angular.isDate
   var angularIsArray = angular.isArray
   var angularIsObject = angular.isObject
@@ -15,8 +15,8 @@
     array.push.apply(array, response)
   }
 
-  function extendObject (response, object) {
-    angularCopy(response, object)
+  function extendObject (destination, object) {
+    angularMerge(destination, object)
   }
 
   function pad (number) {
@@ -99,7 +99,7 @@
   }
 
   function Resource (options) {
-    this.options = options = angularExtend({
+    this.options = options = angularMerge({
       primary: 'id',
 
       casts: {
@@ -193,7 +193,7 @@
 
         if (id) {
           if ($loaded[id]) {
-            angularExtend($loaded[id], item)
+            angularMerge($loaded[id], item)
             data[i] = $loaded[item[options.primary]]
           } else {
             $loaded[id] = item
@@ -275,7 +275,15 @@
           if (angularIsArray(objectOrArray)) {
             extendArray(response, objectOrArray)
           } else if (property) {
-            objectOrArray[property] = response
+            var destination = objectOrArray[property]
+
+            if (angularIsArray(destination)) {
+              objectOrArray[property] = response
+            } else if (angularIsObject(destination)) {
+              extendObject(objectOrArray[property], response);
+            } else {
+              objectOrArray[property] = response
+            }
           } else {
             extendObject(response, objectOrArray)
           }
@@ -485,7 +493,7 @@
     }
 
     this.saveProp = function (objectOrArray, property, params) {
-      return this.save(objectOrArray[property], params).to(objectOrArray[property])
+      return this.save(objectOrArray[property], params).to(objectOrArray, property)
     }
   }
 
