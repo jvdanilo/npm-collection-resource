@@ -395,7 +395,7 @@ $scope.user.save();
 
 ### Extend Collection Resource
 
-If you want to develop advanced addon's for Collection Resource, you can use **Resource.extend()** to do that, and you can see the official addon for **Undo/Redo** functionality for example. Here's how to extend Coollection Resource:
+If you want to develop advanced addon's for Collection Resource, you can use **Resource.extend()** to do that, and you can see the official addon for **Undo/Redo** functionality for example. Here's how to extend Collection Resource:
 
 ```javascript
 angular
