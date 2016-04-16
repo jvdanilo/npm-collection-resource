@@ -16,6 +16,7 @@ describe('Property casting', function() {
 
       casts: {
         joined_on: 'date',
+        accessed: 'date',
 
         settings: function(val, object) {
           if ( ! angular.isObject(val)) {
@@ -58,6 +59,11 @@ describe('Property casting', function() {
       expect(response.joined_on.getHours()).toBe(12);
       expect(response.joined_on.getMinutes()).toBe(21);
       expect(response.joined_on.getSeconds()).toBe(12);
+
+      expect(response.accessed instanceof Date).toBe(true);
+      expect(response.accessed.getFullYear()).toBe(2017);
+      expect(response.accessed.getMonth() + 1).toBe(12);
+      expect(response.accessed.getDate()).toBe(21);
     });
 
     httpBackend.when('GET', '/users/10').respond({
@@ -65,7 +71,8 @@ describe('Property casting', function() {
         id: 10,
         settings: '{"test": 12}',
         bool: '1',
-        joined_on: '2017-12-21 12:21:12'
+        joined_on: '2017-12-21 12:21:12',
+        accessed: '2017-12-21'
       }
     });
     httpBackend.flush()
