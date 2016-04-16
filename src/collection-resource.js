@@ -276,16 +276,15 @@
             extendArray(response, objectOrArray)
           } else if (property) {
             var destination = objectOrArray[property]
-
             if (angularIsArray(destination)) {
               objectOrArray[property] = response
             } else if (angularIsObject(destination)) {
-              extendObject(objectOrArray[property], response);
+              extendObject(objectOrArray[property], response)
             } else {
               objectOrArray[property] = response
             }
           } else {
-            extendObject(response, objectOrArray)
+            extendObject(objectOrArray, response)
           }
         })
         return promise
@@ -493,7 +492,7 @@
     }
 
     this.saveProp = function (objectOrArray, property, params) {
-      return this.save(objectOrArray[property], params).to(objectOrArray, property)
+      return this.save(objectOrArray[property], params).to(objectOrArray[property])
     }
   }
 
