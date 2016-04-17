@@ -16,7 +16,7 @@
   }
 
   function extendObject (destination, object) {
-    angularMerge(destination, object)
+    angularCopy(object, destination)
   }
 
   function pad (number) {
@@ -193,7 +193,7 @@
 
         if (id) {
           if ($loaded[id]) {
-            angularMerge($loaded[id], item)
+            extendObject($loaded[id], item)
             data[i] = $loaded[item[options.primary]]
           } else {
             $loaded[id] = item
