@@ -6,6 +6,7 @@
 
   var angularCopy = angular.copy
   var angularMerge = angular.merge
+  var angularExtend = angular.extend
   var angularIsDate = angular.isDate
   var angularIsArray = angular.isArray
   var angularIsObject = angular.isObject
@@ -16,7 +17,10 @@
   }
 
   function extendObject (destination, object) {
-    angularCopy(object, destination)
+    angularExtend(destination, object)
+    // for (var k in object) {
+      // destination[k] = object[k]
+    // }
   }
 
   function pad (number) {
@@ -187,14 +191,14 @@
         data = [objectOrArray]
       }
 
-      for (i = j = 0, len = data.length; j < len; i = ++j) {
+      for (var i = 0; i < data.length; i++) {
         item = data[i]
         id = item[options.primary] + ''
 
         if (id) {
           if ($loaded[id]) {
             extendObject($loaded[id], item)
-            data[i] = $loaded[item[options.primary]]
+            data[i] = $loaded[id]
           } else {
             $loaded[id] = item
           }
