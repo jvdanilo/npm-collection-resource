@@ -175,14 +175,13 @@
     }
 
     function replaceReferences (objectOrArray) {
-      var item
-      var data
       var i
       var id
-      var j
       var len
-      var $loaded = self.$loaded
+      var data
+      var item
       var isSingleObject
+      var $loaded = self.$loaded
 
       if (angularIsArray(objectOrArray)) {
         data = objectOrArray
@@ -191,7 +190,7 @@
         data = [objectOrArray]
       }
 
-      for (var i = 0; i < data.length; i++) {
+      for (i = 0, len = data.length; i < len; i++) {
         item = data[i]
         id = item[options.primary] + ''
 
