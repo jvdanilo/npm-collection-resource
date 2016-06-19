@@ -427,7 +427,9 @@
     }
 
     this.reset = function (object, params) {
-      return this.get(object[options.primary], params || {}).to(object)
+      params = params || {}
+      params.reload = true
+      return this.get(object[options.primary], params).to(object)
     }
 
     this.push = function (objectOrArray, hydrate) {
