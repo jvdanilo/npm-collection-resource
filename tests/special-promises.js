@@ -1,27 +1,26 @@
 angular.module('testing', [
   'collection.resource',
   'ngMock'
-]);
+])
 
-describe('Special promises', function() {
+describe('Special promises', function () {
+  var api
+  var httpBackend
 
-  var api;
-  var httpBackend;
-
-  beforeEach(module('testing'));
+  beforeEach(module('testing'))
 
   beforeEach(inject(function (Resource, $injector) {
     api = new Resource({
       url: '/users'
-    });
+    })
 
-    httpBackend = $injector.get('$httpBackend');
-  }));
+    httpBackend = $injector.get('$httpBackend')
+  }))
 
-  afterEach(function() {
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
-  });
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation()
+    httpBackend.verifyNoOutstandingRequest()
+  })
 
   it ('.fetching()', function() {
     var holder = {
@@ -66,24 +65,29 @@ describe('Special promises', function() {
     httpBackend.flush()
   });
 
-  it ('.abort()', function() {
-    var promise = api.query()
-    promise.then(function() {
-      console.log( "This shouldn't be reached" );
+  it('.abort()', function () {
+    var request = api.query()
+    request.then(function () {
+      expect(true).toBe(false)
+      console.error("This shouldn't be reached")
     })
-    .catch(function(err) {
-      expect(err).toBeUndefined()
+    request.catch(function (err) {
+      expect(err.status).toBe(-1)
+      expect(err).not.toBeUndefined()
     })
+
     httpBackend.when('GET', '/users').respond({
       data: [{id: 10, name: 'test'}]
-    });
-    promise.abort()
+    })
+
+    request.abort()
+
     try {
       httpBackend.flush()
     } catch (error) {
       expect(error.message).toEqual("No pending request to flush !")
     }
-  });
+  })
 
   it ('.resolve()', function() {
 
@@ -119,5 +123,4 @@ describe('Special promises', function() {
     });
     httpBackend.flush()
   });
-
-});
+})

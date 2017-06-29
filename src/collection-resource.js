@@ -1,9 +1,8 @@
-!(function (empty) {
+;(function (empty) {
   'use strict'
 
   /* globals angular */
   /* globals console */
-
   var angularCopy = angular.copy
   var angularMerge = angular.merge
   var angularExtend = angular.extend
@@ -211,30 +210,10 @@
       }
     }
 
-    function ensureCatch (promise) {
-      var originalCatch = promise.catch
-
-      promise.catch = function () {
-        promise.attachedCatch = true
-        return originalCatch.apply(this, arguments)
+    function transformPromise (promise) {
+      promise.abort = function () {
+        promise.$canceler.resolve('aborted')
       }
-      setTimeout(function warnAboutUnhandledRejection () {
-        if (!promise.attachedCatch) {
-          promise.catch(function () {
-            console.error.apply(console, arguments)
-          })
-
-          var config = ''
-          if (promise.$config) {
-            config = angular.toJson(promise.$config)
-          }
-          console.error('No rejection handler is attached ' + config)
-        }
-      }, 100)
-    }
-
-    function transformPromise (promise, warnWhenWithoutCatch) {
-      warnWhenWithoutCatch = (warnWhenWithoutCatch === empty) ? true : warnWhenWithoutCatch
 
       promise.bind = function ($scope) {
         $scope.$on('$destroy', promise.abort)
@@ -314,10 +293,10 @@
       }
 
       promise.resolve = function () {
-        var p = Promise(function (resolve, reject) {
+        var p = new Promise(function (resolve, reject) {
           promise.thenData(resolve).catch(reject)
         })
-        transformPromise(p)
+        p = transformPromise(p)
         return p
       }
 
@@ -331,9 +310,7 @@
         options.extendPromise(promise)
       }
 
-      if (warnWhenWithoutCatch) {
-        ensureCatch(promise)
-      }
+      return promise
     }
 
     function request (config) {
@@ -357,32 +334,43 @@
         delete config.params
       }
 
+      config.transformRequest = [function (value/*, headersGetter */) {
+        transformRequestParams(value)
+        return value
+      }].concat(Http.defaults.transformRequest)
+
+      config.headers = config.headers || {}
+      config.headers['X-Requested-With'] = 'XMLHttpRequest'
+
+      var canceler = Promise.defer()
+      config.timeout = canceler.promise
+      canceler.promise.then(angular.noop, angular.noop)
+
       var raw
-      var abort = Promise.defer()
+      var defered = Promise.defer()
+      var promise = defered.promise
+      var raw = Http(config)
 
-      var promise = Promise(function (resolve, reject) {
-        config.transformRequest = [function (value/*, headersGetter */) {
-          transformRequestParams(value)
-          return value
-        }].concat(Http.defaults.transformRequest)
-
-        config.headers = config.headers || {}
-        config.headers['X-Requested-With'] = 'XMLHttpRequest'
-        config.timeout = abort.promise
-
-        raw = Http(config)
-        raw.success(resolve).error(reject)
-      })
+      if (raw.success) {
+        raw.success(defered.resolve).error(defered.reject)
+      } else if (raw.then) {
+        raw.then(function (httpResponse) {
+          defered.resolve(httpResponse.data)
+        })
+        .catch(function (httpResponse) {
+          if (canceler.promise.$$state.value == 'aborted') {
+            return
+          }
+          defered.reject(httpResponse)
+        })
+      } else {
+        throw new Error('Unknown request type')
+      }
 
       promise.raw = raw
       promise.$config = config
-
-      promise.abort = function () {
-        abort.resolve('aborted')
-      }
-
-      transformPromise(promise)
-
+      promise.$canceler = canceler
+      promise = transformPromise(promise)
       return promise
     }
 
@@ -406,7 +394,7 @@
       if (this.$loaded[id]) {
         var promise = Promise.when({data: this.$loaded[id]})
 
-        transformPromise(promise)
+        promise = transformPromise(promise)
 
         if (reload) {
           setTimeout(function () {

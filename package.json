@@ -1,0 +1,44 @@
+{
+  "name": "collection-resource",
+  "version": "2.1.8",
+  "description": "REST resource library for AngularJS",
+  "main": "./src/collection-resource.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "angular": "~1.6.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.6.0",
+    "jasmine-core": "~2.6.4",
+    "karma": "~1.7.0",
+    "karma-coverage": "~1.1.1",
+    "karma-firefox-launcher": "~1.0.1",
+    "karma-jasmine": "~1.1.0",
+    "standard": "~10.0.2"
+  },
+  "scripts": {
+    "lint": "standard src/**/*.js",
+    "test": "karma start tests/karma.conf.js --no-auto-watch --single-run --reporters=dots --browsers=Firefox && npm run lint",
+    "watch": "karma start tests/karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvdanilo/npm-collection-resource.git"
+  },
+  "keywords": [
+    "angular",
+    "ajax",
+    "http",
+    "rest",
+    "resource",
+    "collection"
+  ],
+  "author": "Danilo <jvdanilo@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jvdanilo/npm-collection-resource/issues"
+  },
+  "homepage": "https://github.com/jvdanilo/npm-collection-resource#readme"
+}

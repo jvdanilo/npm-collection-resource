@@ -1,15 +1,15 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-    basePath : './../',
+    basePath: './../',
 
     files: [
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
+      'node_modules/angular/angular.js',
+      'node_modules/angular-mocks/angular-mocks.js',
       'src/collection-resource.js',
       'src/undo-redo-addon.js',
       'src/value-get-addon.js',
       '!tests/karma.conf.js',
-      'tests/*.js',
+      'tests/*.js'
     ],
 
     preprocessors: {
@@ -21,27 +21,27 @@ module.exports = function(config) {
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
-        { type: 'html', subdir: 'report-html' },
+        { type: 'html', subdir: 'report-html' }
         // { type: 'text', subdir: '.', file: 'text.txt' },
         // { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
       ]
     },
 
-    autoWatch : true,
+    autoWatch: true,
 
     frameworks: ['jasmine'],
 
-    browsers : ['Firefox'],
+    browsers: ['Firefox'],
 
-    plugins : [
+    plugins: [
       'karma-firefox-launcher',
       'karma-coverage',
-      'karma-jasmine',
+      'karma-jasmine'
     ],
 
-    junitReporter : {
+    junitReporter: {
       outputFile: 'test_out/unit.xml',
       suite: 'unit'
     }
-  });
-};
+  })
+}
