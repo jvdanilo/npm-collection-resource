@@ -63,6 +63,9 @@
     // yyyy-mm-dd
     } else if (dateString[4] === '-' && dateString.length === 10) {
       return standardFormatToDate(dateString)
+    } else {
+      console.error('Unknown date format', dateString)
+      return dateString
     }
   }
 
@@ -346,23 +349,22 @@
       config.timeout = canceler.promise
       canceler.promise.then(angular.noop, angular.noop)
 
-      var raw
       var defered = Promise.defer()
       var promise = defered.promise
       var raw = Http(config)
 
-      if (raw.success) {
-        raw.success(defered.resolve).error(defered.reject)
-      } else if (raw.then) {
+      if (raw.then) {
         raw.then(function (httpResponse) {
           defered.resolve(httpResponse.data)
         })
         .catch(function (httpResponse) {
-          if (canceler.promise.$$state.value == 'aborted') {
+          if (canceler.promise.$$state.value === 'aborted') {
             return
           }
           defered.reject(httpResponse)
         })
+      } else if (raw.success) {
+        raw.success(defered.resolve).error(defered.reject)
       } else {
         throw new Error('Unknown request type')
       }

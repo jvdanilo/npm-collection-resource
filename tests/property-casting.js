@@ -16,6 +16,7 @@ describe('Property casting', function () {
       casts: {
         joined_on: 'date',
         accessed: 'date',
+        not_date: 'date',
 
         settings: function (val, object) {
           if (!angular.isObject(val)) {
@@ -61,6 +62,8 @@ describe('Property casting', function () {
       expect(response.accessed.getFullYear()).toBe(2017)
       expect(response.accessed.getMonth() + 1).toBe(12)
       expect(response.accessed.getDate()).toBe(21)
+
+      expect(response.not_date).toBe('not date')
     })
 
     httpBackend.when('GET', '/users/10').respond({
@@ -69,7 +72,8 @@ describe('Property casting', function () {
         settings: '{"test": 12}',
         bool: '1',
         joined_on: '2017-12-21 12:21:12',
-        accessed: '2017-12-21'
+        accessed: '2017-12-21',
+        not_date: 'not date'
       }
     })
     httpBackend.flush()

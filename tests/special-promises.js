@@ -22,21 +22,21 @@ describe('Special promises', function () {
     httpBackend.verifyNoOutstandingRequest()
   })
 
-  it ('.fetching()', function() {
+  it('.fetching()', function () {
     var holder = {
       loading: false
-    };
+    }
 
-    var promise = api.get(10);
+    var promise = api.get(10)
 
-    promise.then(function() {
-      expect(holder.loading).toBe(true);
-    });
+    promise.then(function () {
+      expect(holder.loading).toBe(true)
+    })
 
-    promise.fetching(holder, 'loading');
+    promise.fetching(holder, 'loading')
 
-    promise.then(function() {
-      expect(holder.loading).toBe(false);
+    promise.then(function () {
+      expect(holder.loading).toBe(false)
     })
 
     httpBackend.when('GET', '/users/10').respond({
@@ -44,16 +44,16 @@ describe('Special promises', function () {
         id: 10,
         name: 'test'
       }
-    });
+    })
     httpBackend.flush()
-  });
+  })
 
-  it ('.fullTo()', function() {
-    var holder = {};
+  it('.fullTo()', function () {
+    var holder = {}
 
-    api.query().fullTo(holder, 'response').then(function() {
-      expect(holder.response.data[0].id).toBe(10);
-      expect(holder.response.data[0].name).toBe('test');
+    api.query().fullTo(holder, 'response').then(function () {
+      expect(holder.response.data[0].id).toBe(10)
+      expect(holder.response.data[0].name).toBe('test')
     })
 
     httpBackend.when('GET', '/users').respond({
@@ -61,9 +61,9 @@ describe('Special promises', function () {
         id: 10,
         name: 'test'
       }]
-    });
+    })
     httpBackend.flush()
-  });
+  })
 
   it('.abort()', function () {
     var request = api.query()
@@ -85,29 +85,28 @@ describe('Special promises', function () {
     try {
       httpBackend.flush()
     } catch (error) {
-      expect(error.message).toEqual("No pending request to flush !")
+      expect(error.message).toEqual('No pending request to flush !')
     }
   })
 
-  it ('.resolve()', function() {
-
-    api.query().resolve().then(function(response) {
-      expect(response[0].id).toBe(10);
-      expect(response[0].name).toBe('test');
+  it('.resolve()', function () {
+    api.query().resolve().then(function (response) {
+      expect(response[0].id).toBe(10)
+      expect(response[0].name).toBe('test')
     })
 
     httpBackend.when('GET', '/users').respond({
       data: [{id: 10, name: 'test'}]
-    });
+    })
     httpBackend.flush()
-  });
+  })
 
-  it ('.bind() lifecycle', function() {
+  it('.bind() lifecycle', function () {
     var event
     var callback
 
     var scope = {
-      $on: function(e, c) {
+      $on: function (e, c) {
         event = e
         callback = c
       }
@@ -120,7 +119,7 @@ describe('Special promises', function () {
 
     httpBackend.when('GET', '/users').respond({
       data: [{id: 10, name: 'test'}]
-    });
+    })
     httpBackend.flush()
-  });
+  })
 })
