@@ -9,7 +9,7 @@ Collection Resource is a simple but powerful AJAX resource library for Angular. 
 
 ## Installation
 
-Install with Bower
+Install with NPM
 
 ```
 npm install collection-resource
