@@ -1,6 +1,7 @@
 # Collection Resource
 
 <!-- [![Bower](https://img.shields.io/bower/v/collection-resource.svg)]() -->
+
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)]()
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Travis](https://img.shields.io/travis/jvdanilo/npm-collection-resource.svg)](https://travis-ci.org/jvdanilo/npm-collection-resource)
