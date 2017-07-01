@@ -1,6 +1,6 @@
 {
   "name": "collection-resource",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "REST resource library for AngularJS",
   "main": "./src/collection-resource.js",
   "directories": {
